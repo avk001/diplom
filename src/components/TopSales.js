@@ -5,6 +5,8 @@ import { addHitSuccess, addHitRequest} from '../actions/actionCreators'
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types'
 
+
+
 function TopSales(props) {
     const {itemsHit, loaddingHit} = useSelector(state => state.topSales);
 
@@ -28,6 +30,7 @@ function TopSales(props) {
                     <div key={nanoid()} className="col-4">
                         <div className="card">
                             <img src={el.images[0]}
+                                onError={(e) => {e.target.src = 'https://populus.ru/wp-content/uploads/2019/11/no-image-500x500.jpg'; e.target.onError = null;}}
                                 className="card-img-top img-fluid" alt="Босоножки 'MYER'" />
                             <div className="card-body">
                                 <p className="card-text">{el.title}</p>
@@ -38,13 +41,14 @@ function TopSales(props) {
                     </div>    
                 )}
                 </div>
-                {loaddingHit ? 
+                {loaddingHit ?
                     <div className="preloader">
                        <span></span>
                        <span></span>
                        <span></span>
                        <span></span>
-                    </div> : null}
+                    </div> : null
+                }
             </section>
     )
 }

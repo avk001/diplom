@@ -5,6 +5,9 @@ import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, getItemLocalStorage } from '../actions/actionCreators';
 
+
+
+
 function ProductPage({match}) {
     const {data} = useSelector(state => state.localStorage);
     const dispatch = useDispatch();
@@ -112,7 +115,9 @@ function ProductPage({match}) {
             <h2 className="text-center">{state.product.title ? state.product.title : null}</h2>
             <div className="row">
                 <div className="col-5">
-                    <img src={state.product.images ? state.product.images[0] : ''} className="img-fluid" alt="" />
+                    <img src={state.product.images ? state.product.images[0] : ''}
+                         onError={(e) => {e.target.src = 'https://populus.ru/wp-content/uploads/2019/11/no-image-500x500.jpg'; e.target.onError = null;}}
+                         className="img-fluid" alt="" />
                 </div>
                 <div className="col-7">
                     <table className="table table-bordered">

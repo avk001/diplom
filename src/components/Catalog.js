@@ -6,6 +6,7 @@ import Search from './Search'
 import { addCatalogRequst, addCatalogSuccess, addCategoriesRequest, addCategoriesSuccess, addNextItemsRequest, addNextItemsSuccess, fetchCategoryItemsRequest, fetchCategoryItemsSuccess, setRedirectSearch, setSearchText } from '../actions/actionCreators';
 import { NavLink } from 'react-router-dom';
 
+
 function Catalog(props) {
 
     const {categories, itemsAll, nextItemsLength, offset, currentCategory, loaddingCatalog, textSearch} = useSelector(state => state.catalog);
@@ -104,20 +105,16 @@ function Catalog(props) {
                     </ul>      
                 : null}
                 
-                {loaddingCatalog ? 
-                    <div className="preloader">
-                       <span></span>
-                       <span></span>
-                       <span></span>
-                       <span></span>
-                    </div> 
-                :
+                {
                     <React.Fragment>
                         <div className="row">
                             {itemsAll.map(el => 
                                 <div key={nanoid()} className="col-4">
                                     <div className="card catalog-item-card">
-                                        <img src={el.images[0]} className="card-img-top img-fluid" alt={el.title} />
+                                        <img src={el.images[0]}
+                                             onError={(e) => {e.target.src = 'https://populus.ru/wp-content/uploads/2019/11/no-image-500x500.jpg'; e.target.onError = null;}}
+                                             className="card-img-top img-fluid" alt={el.title}
+                                        />
                                         <div className="card-body">
                                             <p className="card-text">{el.title}</p>
                                             <p className="card-text">{el.price}</p>
@@ -127,10 +124,25 @@ function Catalog(props) {
                                 </div>    
                             )}
                         </div>
-                        <div className="text-center">
-                            {nextItemsLength < 6 ? null : <button className="btn btn-outline-primary" onClick={handleFetchNextItems}>Загрузить ещё</button>}
-                        </div>
-                    </React.Fragment>    
+                        {
+                            loaddingCatalog ?
+                                <div className="preloader">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+
+                                :
+                                    <div className="text-center">
+                                    {nextItemsLength < 6 ? null :
+                                        <button className="btn btn-outline-primary" onClick={handleFetchNextItems}>Загрузить
+                                            ещё</button>}
+                                    </div>
+
+                        }
+                    </React.Fragment>
+
                 }
             </section>
         </React.Fragment>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { redirectToCart, removeFromCart, setCartQuantity } from '../actions/actionCreators';
+import '../form.css'
 
 function Cart(props) {
 
@@ -13,7 +14,11 @@ function Cart(props) {
             address: ''
         },
         checked: false,
-        ordered: false
+        ordered: false,
+        fields:{
+            phone: false,
+            address: false,
+        }
     })
     
     const dispatch = useDispatch();
@@ -54,8 +59,10 @@ function Cart(props) {
     const handlerChange = (event) => {
         if(event.target.id === 'address') {
             setstate(prevstate => ({...prevstate, owner: {...prevstate.owner, address: event.target.value}}));
+            setstate(prevstate => ({...prevstate, fields: {...prevstate.owner, address: true}}));
         } else if(event.target.id === 'phone') {
             setstate(prevstate => ({...prevstate, owner: {...prevstate.owner, phone: event.target.value}}));
+            setstate(prevstate => ({...prevstate, fields: {...prevstate.owner, phone: true}}));
         } else {
             setstate(prevstate => ({...prevstate, checked: event.target.checked}))
         }    
@@ -91,6 +98,10 @@ function Cart(props) {
             console.log('Заполните форму!')
         }
         
+    }
+
+    const errorClass = (error) => {
+        return(!error ? '' : 'has-error');
     }
     
     return (
@@ -138,17 +149,20 @@ function Cart(props) {
                             <form className="card-body" onSubmit={handlerSubmit}>
                                 <div className="form-group">
                                     <label htmlFor="phone">Телефон</label>
-                                    <input className="form-control" id="phone" placeholder="Ваш телефон" onChange={handlerChange} value={state.owner.phone}/>
+                                    <input className={`form-control ${errorClass(state.owner.phone.trim().length === 0 && state.fields.phone ?1:0)}`} id="phone" placeholder="Ваш телефон" onChange={handlerChange} value={state.owner.phone}/>
+                                    {/*{*/}
+                                    {/*    (state.owner.phone.trim() =='' && state.fields.phone)? <p>Заполните поле</p>: null*/}
+                                    {/*}*/}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="address">Адрес доставки</label>
-                                    <input className="form-control" id="address" placeholder="Адрес доставки" onChange={handlerChange} value={state.owner.address}/>
+                                    <input className={`form-control ${errorClass(state.owner.address.trim().length === 0 && state.fields.address?1:0)}`} id="address" placeholder="Адрес доставки" onChange={handlerChange} value={state.owner.address}/>
                                 </div>
                                 <div className="form-group form-check">
                                     <input type="checkbox" className="form-check-input" id="agreement" onChange={handlerChange}/>
                                     <label className="form-check-label" htmlFor="agreement">Согласен с правилами доставки</label>
                                 </div>
-                                <button type="submit" className="btn btn-outline-secondary">Оформить</button>
+                                <button type="submit" className="btn btn-secondary " disabled={state.owner.phone !== '' && state.owner.address !== '' && state.checked === true?0:1}>Оформить</button>
                             </form>
                         </div>
                     }
